@@ -32,5 +32,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, TimeActivity::class.java)
             startActivity(intent)
         }
+        
+        val data = arrayOf("test1", "test2", "test3")
+        list.adapter = ReminderAdapter(applicationContext, data)
     }
 }
