@@ -26,30 +26,34 @@ class TimeActivity : AppCompatActivity() {
                 timePicker.currentMinute
             )
             val text = editTimeMessage.text.toString()
-            val millis = calendar.timeInMillis
-            if (text != "" && millis > System.currentTimeMillis()) {
-                val reminder = Reminder(
-                    uid = null,
-                    time = millis,
-                    location = null,
-                    message = text
-                )
-                doAsync {
-                    val db = Room.databaseBuilder(
-                        applicationContext,
-                        AppDatabase::class.java,
-                        "reminders"
-                    ).build()
-                    db.reminderDao().insert(reminder)
-                    db.close()
-                    
-                    setAlarm(reminder.time!!, reminder.message)
-                    
-                    finish()
-                }
+            if (text.isEmpty()) {
+                toast("Please provide reminder text")
+                return@setOnClickListener
             }
-            else {
-                toast("Invalid data")
+            val millis = calendar.timeInMillis
+            if (millis <= System.currentTimeMillis()) {
+                toast("Invalid time")
+                return@setOnClickListener
+            }
+            
+            val reminder = Reminder(
+                uid = null,
+                time = millis,
+                location = null,
+                message = text
+            )
+            doAsync {
+                val db = Room.databaseBuilder(
+                    applicationContext,
+                    AppDatabase::class.java,
+                    "reminders"
+                ).build()
+                db.reminderDao().insert(reminder)
+                db.close()
+                
+                setAlarm(reminder.time!!, reminder.message)
+                
+                finish()
             }
         }
     }

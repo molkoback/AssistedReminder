@@ -3,11 +3,10 @@ package com.molko.assistedreminder
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import org.jetbrains.anko.toast
+import android.util.Log
 
 class ReminderReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        val text = intent.getStringExtra("message")
-        context.toast(text!!)
+    override fun onReceive(context: Context?, intent: Intent?) {
+        Log.i("Assisted Reminder", intent?.getStringExtra("message"))
     }
 }
