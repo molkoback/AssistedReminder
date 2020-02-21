@@ -1,13 +1,19 @@
 package com.molko.assistedreminder
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import androidx.core.app.NotificationCompat
 import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +67,29 @@ class MainActivity : AppCompatActivity() {
                     toast("No reminders")
                 }
             }
+        }
+    }
+    
+    companion object {
+        val CHANNEL_ID = "REMINDER_NOTIFICATION_CHANNEL"
+        var notificationID = 1567
+        fun showNotification(context: Context, message: String) {
+            val name = context.getString(R.string.app_name)
+            val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_alarm)
+                .setContentTitle(name)
+                .setContentText(message)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = name
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+            val notification = notificationID + Random(notificationID).nextInt(1, 30)
+            notificationManager.notify(notificationID, notificationBuilder.build())
         }
     }
 }

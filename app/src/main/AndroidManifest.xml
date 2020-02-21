@@ -18,14 +18,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <receiver
             android:name=".ReminderReceiver"
             android:exported="true" />
+        <receiver
+            android:name=".GeofenceReceiver"
+            android:exported="true" />
+        
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDNyuG3XtHHKaSM2jCzTBhWOV-RYsu6MSM"/>
     </application>
     
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 </manifest>

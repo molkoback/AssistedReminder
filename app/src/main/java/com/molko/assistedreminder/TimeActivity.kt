@@ -48,22 +48,22 @@ class TimeActivity : AppCompatActivity() {
                     AppDatabase::class.java,
                     "reminders"
                 ).build()
-                db.reminderDao().insert(reminder)
+                val uid = db.reminderDao().insert(reminder).toInt()
+                reminder.uid = uid
                 db.close()
-                
-                setAlarm(reminder.time!!, reminder.message)
-                
+                setAlarm(reminder)
                 finish()
             }
         }
     }
     
-    private fun setAlarm(time: Long, message: String) {
+    private fun setAlarm(reminder: Reminder) {
         val intent = Intent(this, ReminderReceiver::class.java)
-        intent.putExtra("message", message)
+            .putExtra("uid", reminder.uid)
+            .putExtra("message", reminder.message)
         val pendingIntent = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_ONE_SHOT)
         val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        manager.setExact(AlarmManager.RTC, time, pendingIntent)
+        manager.setExact(AlarmManager.RTC, reminder.time!!, pendingIntent)
         runOnUiThread{toast("Reminder created")}
     }
 }
