@@ -42,6 +42,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         
         (map_fragment as SupportMapFragment).getMapAsync(this)
         geofencingClient = LocationServices.getGeofencingClient(this)
+        
+        searchMap.setOnClickListener {
+            with (gMap) {
+                val locations = Geocoder(applicationContext, Locale.getDefault())
+                    .getFromLocationName(searchAutoComplete.text.toString(), 1)
+                val latLng = LatLng(locations.get(0).latitude, locations.get(0).longitude)
+                animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
+            }
+        }
+        
         mapCreate.setOnClickListener {
             val text = editMapMessage.text.toString()
             if (text.isEmpty()) {
